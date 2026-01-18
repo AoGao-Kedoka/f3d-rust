@@ -1,8 +1,7 @@
 [workspace]
 members = [
-    "f3d-sys",
     "f3d",
-    "f3d-example"
+    "f3d-sys",
 ]
 
 resolver = "2"

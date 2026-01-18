@@ -1,5 +1,5 @@
-use crate::{Options, Scene, Interactor, Window};
 use crate::sys::*;
+use crate::{Interactor, Options, Scene, Window};
 use std::ptr::NonNull;
 
 pub struct Engine {
@@ -9,7 +9,6 @@ pub struct Engine {
 impl Engine {
     pub fn new() -> Self {
         unsafe {
-            f3d_engine_autoload_plugins();
             let ptr = f3d_engine_create(0);
             Self {
                 ptr: NonNull::new(ptr).expect("f3d_engine_create returned null"),
@@ -17,22 +16,22 @@ impl Engine {
         }
     }
 
-    pub fn options(&self) -> Options {
+    pub fn auto_load_plugins(&self) {
         unsafe {
-            Options::from_raw(f3d_engine_get_options(self.ptr.as_ptr()))
+            f3d_engine_autoload_plugins();
         }
+    }
+
+    pub fn options(&self) -> Options {
+        unsafe { Options::from_raw(f3d_engine_get_options(self.ptr.as_ptr())) }
     }
 
     pub fn scene(&self) -> Scene {
-        unsafe {
-            Scene::from_raw(f3d_engine_get_scene(self.ptr.as_ptr()))
-        }
+        unsafe { Scene::from_raw(f3d_engine_get_scene(self.ptr.as_ptr())) }
     }
 
     pub fn interactor(&self) -> Interactor {
-        unsafe {
-            Interactor::from_raw(f3d_engine_get_interactor(self.ptr.as_ptr()))
-        }
+        unsafe { Interactor::from_raw(f3d_engine_get_interactor(self.ptr.as_ptr())) }
     }
 
     pub fn window(&self) -> Window {
@@ -41,6 +40,11 @@ impl Engine {
             Window::from_raw(ptr)
         }
     }
+    
+
+    // TODO: Other backends
+    // TODO: Plugins
+    // TODO: lib and reader info
 }
 
 impl Drop for Engine {
@@ -50,4 +54,3 @@ impl Drop for Engine {
         }
     }
 }
-

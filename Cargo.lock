@@ -109,13 +109,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "f3d-example"
-version = "0.1.0"
-dependencies = [
- "f3d",
-]
-
-[[package]]
 name = "f3d-sys"
 version = "0.1.0"
 dependencies = [
