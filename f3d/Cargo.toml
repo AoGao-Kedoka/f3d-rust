@@ -1,0 +1,8 @@
+[package]
+name = "f3d"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+f3d-sys = { path = "../f3d-sys" }
+

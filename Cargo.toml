@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "f3d-sys",
+    "f3d",
+    "f3d-example"
+]
+
+resolver = "2"
+
