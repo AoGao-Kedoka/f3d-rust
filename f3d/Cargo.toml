@@ -4,5 +4,5 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-f3d-sys = { path = "../f3d-sys" }
+f3d-sys = { git = "https://github.com/AoGao-Kedoka/f3d-rust-binding.git", package = "f3d-sys" }
 
