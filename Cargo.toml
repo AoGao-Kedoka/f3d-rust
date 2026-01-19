@@ -1,8 +1,16 @@
-[workspace]
-members = [
-    "f3d",
-    "f3d-sys",
-]
+[package]
+name = "f3d"
+version = "0.1.0"
+edition = "2024"
 
-resolver = "2"
+[dependencies.f3d-sys]
+path = "f3d-sys"
 
+[features]
+default = []
+examples = []
+
+[[example]]
+name = "basic"
+path = "examples/main.rs"
+required-features = ["examples"]

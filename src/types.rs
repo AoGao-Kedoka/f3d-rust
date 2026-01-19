@@ -94,6 +94,18 @@ pub struct F3DTransform2d {
     pub data: [f64; 9],
 }
 
+impl F3DTransform2d {
+    pub fn identity() -> Self {
+        Self {
+            data: [
+                1.0, 0.0, 0.0, 
+                0.0, 1.0, 0.0, 
+                0.0, 0.0, 1.0
+            ],
+        }
+    }
+}
+
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct F3DColormap {
@@ -101,9 +113,40 @@ pub struct F3DColormap {
     pub count: usize,
 }
 
+impl F3DColormap {
+    pub fn from_slice(slice: &mut [f64]) -> Self {
+        Self { data: slice.as_mut_ptr(), count: slice.len() }
+    }
+}
+
+pub struct F3DMesh {
+    points: Vec<f32>,
+    normals: Vec<f32>,
+    texcoords: Vec<f32>,
+    face_sides: Vec<u32>,
+    face_indices: Vec<u32>,
+}
+
+impl F3DMesh {
+    pub fn as_f3d_mesh(&self) -> F3DMeshFFI {
+        F3DMeshFFI {
+            points: self.points.as_ptr() as *mut f32,
+            points_count: self.points.len(),
+            normals: self.normals.as_ptr() as *mut f32,
+            normals_count: self.normals.len(),
+            texture_coordinates: self.texcoords.as_ptr() as *mut f32,
+            texture_coordinates_count: self.texcoords.len(),
+            face_sides: self.face_sides.as_ptr() as *mut u32,
+            face_sides_count: self.face_sides.len(),
+            face_indices: self.face_indices.as_ptr() as *mut u32,
+            face_indices_count: self.face_indices.len(),
+        }
+    }
+}
+
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct F3DMesh {
+pub struct F3DMeshFFI {
     pub points: *mut f32,
     pub points_count: usize,
     pub normals: *mut f32,
@@ -134,4 +177,18 @@ pub struct F3DLightState {
     pub positional_light: i32,
     pub intensity: f64,
     pub switch_state: i32,
+}
+
+impl F3DLightState {
+    pub fn new(type_: F3DLightType, position: F3DPoint3, color: F3DColor, direction: F3DDirection, positional_light: bool, intensity: f64, switch_state: bool) -> Self {
+        Self {
+            type_,
+            position: position.data,
+            color,
+            direction: direction.data,
+            positional_light: if positional_light {1} else {0},
+            intensity,
+            switch_state: if switch_state {1} else {0},
+        }
+    }
 }
