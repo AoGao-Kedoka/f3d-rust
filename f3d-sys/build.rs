@@ -16,8 +16,12 @@ fn main() {
 
     println!("cargo:rustc-link-lib=dylib=f3d_c_api");
 
-    #[cfg(any(target_os = "linux", target_os = "macos"))]
+    #[cfg(target_os = "linux")]
     println!("cargo:rustc-link-lib=dylib=stdc++");
+
+    #[cfg(target_os = "macos")]
+    println!("cargo:rustc-link-lib=dylib=c++");
+
 
     let bindings = bindgen::Builder::default()
         .header("vendor/libf3d/c/engine_c_api.h")
