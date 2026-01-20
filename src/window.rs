@@ -1,5 +1,6 @@
-use crate::sys::*;
 use crate::camera::Camera;
+use crate::image::Image;
+use crate::sys::*;
 use crate::types::F3DPoint3;
 use std::ffi::CString;
 use std::ptr::NonNull;
@@ -38,16 +39,19 @@ impl Window {
     }
 
     pub fn camera(&self) -> Camera {
-        unsafe {
-            Camera::from_raw(f3d_window_get_camera(self.ptr.as_ptr()))
-        }
+        unsafe { Camera::from_raw(f3d_window_get_camera(self.ptr.as_ptr())) }
     }
 
     pub fn render(&self) -> bool {
         unsafe { f3d_window_render(self.ptr.as_ptr()) != 0 }
     }
 
-    //TODO: render to image
+    pub fn render_to_image(&self, no_background: bool) -> Option<Image> {
+        let img_ptr = unsafe {
+            f3d_window_render_to_image(self.ptr.as_ptr(), if no_background { 1 } else { 0 })
+        };
+        NonNull::new(img_ptr).map(|ptr| unsafe { Image::from_raw(ptr.as_ptr()) })
+    }
 
     pub fn set_size(&self, width: i32, height: i32) {
         unsafe {
@@ -82,7 +86,7 @@ impl Window {
         }
     }
 
-    pub fn world_from_display(&self, display:F3DPoint3) -> F3DPoint3 {
+    pub fn world_from_display(&self, display: F3DPoint3) -> F3DPoint3 {
         let mut world = F3DPoint3::default();
         unsafe {
             f3d_window_get_world_from_display(
@@ -94,7 +98,7 @@ impl Window {
         world
     }
 
-    pub fn display_from_world(&self, world:F3DPoint3) -> F3DPoint3 {
+    pub fn display_from_world(&self, world: F3DPoint3) -> F3DPoint3 {
         let mut display = F3DPoint3::default();
         unsafe {
             f3d_window_get_display_from_world(

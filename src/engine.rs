@@ -1,5 +1,8 @@
 use crate::sys::*;
-use crate::{Interactor, Options, Scene, Window};
+use crate::interactor::Interactor;
+use crate::options::Options;
+use crate::scene::Scene;
+use crate::window::Window;
 use std::ptr::NonNull;
 
 pub struct Engine {

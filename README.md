@@ -6,7 +6,7 @@ Rust bindings for the [f3d](https://github.com/f3d-app/f3d).
 
 This project is in a very early stage and the API is unstable. A lot of features are missing, and there will be breaking changes.
 
-This is just a personal playground for me to experiment with Rust and FFI bindings for f3d. Use at your own risk!
+This is just a personal playground for me to experiment with Rust and FFI bindings for f3d. Most of the code are untested, Use at your own risk!
 
 I’m still learning Rust, and much of this work was done with the help of ChatGPT, so expect rough edges, unidiomatic code, and breaking changes.
 

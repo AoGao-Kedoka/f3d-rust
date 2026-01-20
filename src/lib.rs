@@ -7,10 +7,7 @@ mod interactor;
 mod window;
 mod camera;
 mod types;
+mod image;
 
 pub use engine::Engine;
-pub use options::Options;
-pub use scene::Scene;
-pub use interactor::Interactor;
-pub use window::Window;
-pub use camera::Camera;
+pub use image::{Image, ImageFormat, ImageChannelType};
