@@ -1,13 +1,12 @@
-pub use f3d_sys as sys;
+pub mod sys {
+    pub use f3d_sys::*;
+}
 
-mod engine;
+mod camera;
+pub mod engine;
+pub mod image;
+mod interactor;
 mod options;
 mod scene;
-mod interactor;
-mod window;
-mod camera;
 mod types;
-mod image;
-
-pub use engine::Engine;
-pub use image::{Image, ImageFormat, ImageChannelType};
+mod window;
