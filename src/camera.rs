@@ -2,6 +2,13 @@ use crate::sys::*;
 use crate::types;
 use std::ptr::NonNull;
 
+pub struct CameraState {
+    position: types::F3DPoint3,
+    focal_point: types::F3DPoint3,
+    view_up: types::F3DVector3,
+    view_angle: f64,
+}
+
 pub struct Camera {
     ptr: NonNull<f3d_camera_t>,
 }
@@ -65,7 +72,22 @@ impl Camera {
         unsafe { f3d_camera_get_view_angle(self.ptr.as_ptr()) }
     }
 
-    //TODO: camera state
+    pub fn get_state(&self) -> CameraState {
+        unsafe {
+            let mut state_raw = std::mem::MaybeUninit::<f3d_camera_state_t>::uninit();
+
+            f3d_camera_get_state(self.ptr.as_ptr(), state_raw.as_mut_ptr());
+
+            let state_raw = state_raw.assume_init();
+
+            CameraState {
+                position: types::F3DPoint3::from_ptr(&state_raw.position[0]),
+                focal_point: types::F3DPoint3::from_ptr(&state_raw.focal_point[0]),
+                view_up: types::F3DVector3::from_ptr(&state_raw.view_up[0]),
+                view_angle: state_raw.view_angle,
+            }
+        }
+    }
 
     pub fn camera_dolly(&self, val: f64) {
         unsafe {

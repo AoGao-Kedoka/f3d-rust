@@ -26,6 +26,14 @@ impl F3DPoint3 {
     pub fn default() -> Self {
         F3DPoint3::ZERO
     }
+
+    pub fn from_ptr(ptr: *const f64) -> Self {
+        unsafe {
+            F3DPoint3 {
+                data: [*ptr, *ptr.add(1), *ptr.add(2)],
+            }
+        }
+    }
 }
 
 #[repr(C)]
@@ -55,6 +63,14 @@ impl F3DVector3 {
 
     pub fn default() -> Self {
         F3DVector3::ZERO
+    }
+
+    pub fn from_ptr(ptr: *const f64) -> Self {
+        unsafe {
+            F3DVector3 {
+                data: [*ptr, *ptr.add(1), *ptr.add(2)],
+            }
+        }
     }
 }
 
@@ -97,11 +113,7 @@ pub struct F3DTransform2d {
 impl F3DTransform2d {
     pub fn identity() -> Self {
         Self {
-            data: [
-                1.0, 0.0, 0.0, 
-                0.0, 1.0, 0.0, 
-                0.0, 0.0, 1.0
-            ],
+            data: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
         }
     }
 }
@@ -115,7 +127,10 @@ pub struct F3DColormap {
 
 impl F3DColormap {
     pub fn from_slice(slice: &mut [f64]) -> Self {
-        Self { data: slice.as_mut_ptr(), count: slice.len() }
+        Self {
+            data: slice.as_mut_ptr(),
+            count: slice.len(),
+        }
     }
 }
 
@@ -180,15 +195,23 @@ pub struct F3DLightState {
 }
 
 impl F3DLightState {
-    pub fn new(type_: F3DLightType, position: F3DPoint3, color: F3DColor, direction: F3DDirection, positional_light: bool, intensity: f64, switch_state: bool) -> Self {
+    pub fn new(
+        type_: F3DLightType,
+        position: F3DPoint3,
+        color: F3DColor,
+        direction: F3DDirection,
+        positional_light: bool,
+        intensity: f64,
+        switch_state: bool,
+    ) -> Self {
         Self {
             type_,
             position: position.data,
             color,
             direction: direction.data,
-            positional_light: if positional_light {1} else {0},
+            positional_light: if positional_light { 1 } else { 0 },
             intensity,
-            switch_state: if switch_state {1} else {0},
+            switch_state: if switch_state { 1 } else { 0 },
         }
     }
 }
