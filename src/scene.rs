@@ -60,12 +60,12 @@ impl Scene {
         }
     }
 
-    pub fn add_light(&self, light_state: F3DLightState) -> i32 {
+    pub fn add_light(&self, light_state: F3DLightState) -> Result<i32, NulError>{
         unsafe {
-            f3d_scene_add_light(
+            Ok(f3d_scene_add_light(
                 self.ptr.as_ptr(),
                 &light_state as *const F3DLightState as *const f3d_light_state_t,
-            )
+            ))
         }
     }
 

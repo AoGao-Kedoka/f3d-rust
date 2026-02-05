@@ -3,7 +3,7 @@ use crate::options::Options;
 use crate::scene::Scene;
 use crate::sys::*;
 use crate::window::Window;
-use std::ffi::CStr;
+use std::ffi::{CStr, NulError};
 use std::ptr::NonNull;
 
 #[derive(Debug, Clone)]
@@ -156,9 +156,9 @@ impl Engine {
         }
     }
 
-    pub fn load_plugin(plugin_path: &str) {
+    pub fn load_plugin(plugin_path: &str) ->Result<i32, NulError> {
         let c_plugin_path = std::ffi::CString::new(plugin_path).expect("CString::new failed");
-        unsafe { f3d_engine_load_plugin(c_plugin_path.as_ptr()) }
+        unsafe { Ok(f3d_engine_load_plugin(c_plugin_path.as_ptr())) }
     }
 
     pub fn get_plugins_list(path: &str) -> Vec<String> {
