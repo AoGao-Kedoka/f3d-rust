@@ -114,7 +114,7 @@ impl Image {
     }
 
     pub fn channel_type(&self) -> ImageChannelType {
-        ImageChannelType::from_raw(unsafe { f3d_image_get_channel_type(self.ptr.as_ptr()) })
+        ImageChannelType::from_raw(unsafe { f3d_image_get_channel_type(self.ptr.as_ptr()).try_into().unwrap() })
     }
 
     pub fn set_content(&mut self, data: &[u8]) {

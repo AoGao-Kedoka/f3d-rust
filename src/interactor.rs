@@ -371,26 +371,26 @@ impl Interactor {
     pub fn add_command<F>(&self, action: &str, callback: F)
     where
         F: Fn(&[String]) + Send + 'static,
-    {
-        let action_cstr = CString::new(action).expect("Invalid action");
+        {
+            let action_cstr = CString::new(action).expect("Invalid action");
 
-        // Box the closure and leak it
-        let boxed: Box<Box<dyn Fn(&[String]) + Send>> = Box::new(Box::new(callback));
+            // Box the closure and leak it
+            let boxed: Box<Box<dyn Fn(&[String]) + Send>> = Box::new(Box::new(callback));
 
-        let user_data = Box::into_raw(boxed) as *mut c_void;
+            let user_data = Box::into_raw(boxed) as *mut c_void;
 
-        unsafe {
-            f3d_interactor_add_command(
-                self.ptr.as_ptr(),
-                action_cstr.as_ptr(),
-                Some(
-                    Self::command_callback
+            unsafe {
+                f3d_interactor_add_command(
+                    self.ptr.as_ptr(),
+                    action_cstr.as_ptr(),
+                    Some(
+                        Self::command_callback
                         as unsafe extern "C" fn(*mut *const c_char, c_int, *mut c_void),
-                ),
-                user_data,
-            );
+                    ),
+                    user_data,
+                );
+            }
         }
-    }
 
     pub fn remove_command(&self, action: &str) {
         let action_cstr = CString::new(action).expect("Invalid action");
@@ -434,7 +434,7 @@ impl Interactor {
         }
     }
 
-    pub fn add_binding(&self, bind: InteractionBind, commands: Vec<String>, group: Option<&str>) {
+    pub fn add_binding(&self, bind: InteractionBind, commands: Vec<String>, group: Option<&str>, bind_type: InteractorBindType, notify: i32) {
         let bind_raw = bind.to_raw();
         let commands_cstr: Vec<CString> = commands
             .iter()
@@ -450,6 +450,8 @@ impl Interactor {
                 commands_ptrs.as_ptr() as *mut *const i8,
                 commands_ptrs.len() as i32,
                 cgroup.map_or(std::ptr::null(), |cg| cg.as_ptr()),
+                bind_type as f3d_interactor_binding_type_t,
+                notify
             );
         }
     }
